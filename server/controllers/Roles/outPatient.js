@@ -83,6 +83,7 @@ exports.newOutPatient = async (req, res, next) => {
       userName,
     });
   } catch (error) {
+    console.log(error)
     res.json({
       success: false,
       message: "Process faild something went wrong",
