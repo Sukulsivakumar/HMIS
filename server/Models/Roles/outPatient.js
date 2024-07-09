@@ -63,7 +63,7 @@ const outPatientSchema = new mongoose.Schema({
   mobileNumber: {
     type: Number,
     required: [true, "Mobile Number is required"],
-    validate: [validator.isNumeric, "Enter a valid Mobile Number"],
+    //validate: [validator.isNumeric, "Enter a valid Mobile Number"],
   },
   email: {
     type: String,
