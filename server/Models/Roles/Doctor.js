@@ -86,10 +86,10 @@ const doctorSchema = new mongoose.Schema({
       required: true,
     },
   ],
-  mobileNumber:{
+  mobileNumber: {
     type: Number,
-    required : [true, "Mobile Number is required"],
-    validate: [validator.isNumeric , "Enter a valid Mobile Number"]
+    required: [true, "Mobile Number is required"],
+    validate: [validator.isNumeric, "Enter a valid Mobile Number"],
   },
   email: {
     type: String,
@@ -97,36 +97,35 @@ const doctorSchema = new mongoose.Schema({
     validate: [validator.isEmail, "Please enter a valid email Id"],
     unique: true,
   },
-  department:{
+  department: {
     type: String,
-    required : [true, "Departememt is required"],    
+    required: [true, "Departememt is required"],
   },
-  specialization:{
+  specialization: {
     type: String,
-    required: [true, "Specialization is required"]
+    required: [true, "Specialization is required"],
   },
-  vistingCharge:{
+  vistingCharge: {
     type: String,
-    required : [true, "Visiting Charge is required"]
+    required: [true, "Visiting Charge is required"],
   },
-  consultingCharge:{
+  consultingCharge: {
     type: String,
-    required:[true, "Consulting Charge is required"]
+    required: [true, "Consulting Charge is required"],
   },
-  image:{
+  image: {
     type: String,
   },
-  cv:{
-    type: String
+  cv: {
+    type: String,
   },
-  educationCertificate:{
-    type: String
+  educationCertificate: {
+    type: String,
   },
-  experienceCertficate:{
-    type: String
-  }
+  experienceCertficate: {
+    type: String,
+  },
 });
-
 
 let doctorModel = mongoose.model("doctor", doctorSchema);
 
