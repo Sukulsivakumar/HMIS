@@ -1,5 +1,6 @@
 const outPatientModel = require("../../Models/Roles/outPatient");
 const credentialModel = require("../../Models/Auth/Credentials");
+const userNameModel = require("../../Models/Other/userName");
 
 const generatePatientID = async () => {
   let newId;
@@ -12,28 +13,11 @@ const generatePatientID = async () => {
   return newId;
 };
 
-const generateUserName = async (firstName, lastName) => {
-  let baseUsername = (firstName + lastName).toLowerCase();
-  if (baseUsername.length < 5) {
-    baseUsername = baseUsername.padEnd(5, "0");
-  } else {
-    baseUsername = baseUsername.substring(0, 5);
-  }
-
-  let newUsername = baseUsername;
-  let counter = 1;
-
-  while (await credentialModel.exists({ userId: newUsername })) {
-    newUsername = `${baseUsername}${counter}`;
-    counter++;
-  }
-
-  return newUsername;
-};
-
 exports.newOutPatient = async (req, res, next) => {
   try {
     const {
+      userName,
+      password,
       firstName,
       middleName,
       lastName,
@@ -53,42 +37,59 @@ exports.newOutPatient = async (req, res, next) => {
       image,
     } = req.body;
 
-    const patientId = await generatePatientID();
-    const userName = await generateUserName(firstName, lastName);
+    const available = await userNameModel.findOne({ userName: userName });
+    if (!available) {
 
-    const newOutPatient = new outPatientModel({
-      patientId,
-      firstName,
-      middleName,
-      lastName,
-      dateOfBirth,
-      bloodGroup,
-      gender,
-      addressLine,
-      city,
-      state,
-      country,
-      pincode,
-      mobileNumber,
-      email,
-      assignDoctor,
-      symptoms,
-      diagnosisReport,
-      image,
-    });
-    await newOutPatient.save();
+      const patientId = await generatePatientID();
+      const newOutPatient = new outPatientModel({
+        patientId,
+        firstName,
+        middleName,
+        lastName,
+        dateOfBirth,
+        bloodGroup,
+        gender,
+        addressLine,
+        city,
+        state,
+        country,
+        pincode,
+        mobileNumber,
+        email,
+        assignDoctor,
+        symptoms,
+        diagnosisReport,
+        image,
+      });
 
-    res.status(201).json({
-      success: true,
-      message: "Out Patient added",
-      patientId,
-      userName,
-    });
+      await newOutPatient.save();
+
+      const newCredentials = new credentialModel({
+        userName,
+        password,
+        role :'patient'
+      })
+
+      await newCredentials.save()
+      await userNameModel.create({userName})
+      res.status(201).json({
+        success: true,
+        message: "Out Patient added",
+        patientId
+      });
+
+    }
+    else{
+      res.json({
+        success: false,
+        message: "This username is already taken"
+      })
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.json({
       success: false,
-      message: "Process faild something went wrong",
+      message: "Process failed something went wrong",
     });
   }
 };
