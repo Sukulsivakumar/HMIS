@@ -5,7 +5,7 @@ const userNameSchema = new mongoose.Schema({
     type: String,
     required: [true, "userName is required"],
     unique: true,
-    index : true
+    index: true,
   },
 });
 

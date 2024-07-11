@@ -71,16 +71,6 @@ const outPatientSchema = new mongoose.Schema({
     validate: [validator.isEmail, "Please enter a valid email Id"],
     unique: true,
   },
-  assignDoctor: {
-    type: String,
-  },
-  symptoms: {
-    type: [String],
-    required: [true, "Symptoms is required"],
-  },
-  diagnosisReport: {
-    type: [String],
-  },
   image: {
     type: String,
   },
